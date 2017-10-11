@@ -413,5 +413,32 @@ name.VN = 'Vietnam';
 name.YE = 'Yemen, Rep.';
 name.ZM = 'Zambia';
 name.ZW = 'Zimbabwe';
+// Overrides for NYDF-supplied country names
+// Andorra
+// Antigua and Barbuda
+// Bahamas
+// Barbados
+// Belize
+name.CF = 'Central African Republic';
+name.CD = 'Democratic Republic of Congo';
+// Dominica
+name.DO = 'Dominican Republic';
+// Grenada
+// Macedonia
+// Maldives
+// Micronesia
+name.KP = 'North Korea';
+// Palau
+// Palestine
+name.CG = 'Republic of Congo';
+// Saint Kitts and Nevis
+// Saint Lucia
+// Saint Vincent and the Grenadines
+// San Marino
+// Seychelles
+name.KR = 'South Korea';
+// South Sudan
+// Timor-Leste
+// Vanuatu
 
 module.exports = { centroid, name };
