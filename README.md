@@ -23,7 +23,7 @@ Install on Linux/OSX using:
 
 ## TODOs
 
-- [ ] Set up basic Bootstrap 3 project in 'public' directory.
+- [x] Set up basic Bootstrap 3 project in 'public' directory.
 - [ ] Copy data from source-data Excel workbook into a TSV file ('countries.csv').
 - [ ] Write a script ('convert-tsv-to-json.js') to pull only the relevant data from 'countries.csv' and save it into a JSON file ('data.json'). Webpack can then include the data in the client JS bundle.
 - [ ] Set up Webpack/Babel to write bundled JS file into public directory. Include BrowserSync server.
