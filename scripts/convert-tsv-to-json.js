@@ -4,54 +4,65 @@ require('dotenv').config();
 const debug = require('debug')('nydf:convert-tsv-to-json');
 const path = require('path');
 const fs = require('fs-extra');
+const d3 = require('d3');
 const _ = require('lodash');
 
 const countries = require('../data_files/countries');
 
 const DATA_DIR = path.join(__dirname, '..', 'data_files');
-const COL_DEFS = [
-  {
-    key: 'countryName', sourceIndex: 0, label: 'Country',
+const FIELD_DEFS = {
+  countryName: {
+    sourceIndex: 0, label: 'Country',
   },
-  {
-    key: 'areaLoss', sourceIndex: 2, label: 'Tree Cover Loss', units: 'MHa', isNumber: true,
+  areaLoss: {
+    sourceIndex: 2, label: 'Tree Cover Loss', units: 'M ha', isNumber: true, format: '.1f',
   },
-  {
-    key: 'percentLoss', sourceIndex: 3, label: 'Percent per Year', units: '%/yr', isNumber: true,
+  percentLoss: {
+    sourceIndex: 3, label: 'Tree Cover Loss', units: 'percent/yr', isNumber: true, format: '.3f',
   },
-  {
-    key: 'financeResultsBased', sourceIndex: 6, label: 'Results-Based REDD+ Commitments', units: 'USD Million', isNumber: true,
+  financeResultsBased: {
+    sourceIndex: 6, label: 'Results-Based REDD+ Commitments', units: 'M USD', isNumber: true, format: ',.0f',
   },
-  {
-    key: 'financePhase', sourceIndex: 4, label: 'REDD+ Phase 1 and 2 Finance', units: 'USD Million', isNumber: true,
+  financePhase: {
+    sourceIndex: 4, label: 'REDD+ Phase 1 and 2 Finance', units: 'M USD', isNumber: true, format: ',.0f',
   },
-  {
-    key: 'financeDevelopment', sourceIndex: 5, label: 'Development Finance', units: 'USD Million', isNumber: true,
+  financeDevelopment: {
+    sourceIndex: 5, label: 'Development Finance', units: 'M USD', isNumber: true, format: ',.0f',
   },
-];
+};
 
-function tsvExtractor(colDefsArg) {
+function tsvExtractor(fieldDefsArg) {
   function parse(tsvString) {
     const data = [];
-    const colDefs = _.cloneDeep(colDefsArg);
+    const fieldDefs = _.cloneDeep(fieldDefsArg);
     const rows = tsvString.split('\n');
     // Shift off the first row (header) and split into an array of Strings
     // trimming each string in the process
-    const headers = rows.shift().split('\t').map(h => h.trim());
+    // const headers = rows.shift().split('\t').map(h => h.trim());
+    rows.shift(); // Shift off the first row (header)
     rows.forEach((rowString) => {
       if (!rowString.length) return;
       const row = rowString.split('\t').map(r => r.trim());
-      // loop through all the column defs
+      // loop through each column def, using references to data column to add property values
       const dataRow = {};
-      colDefs.forEach((colDef) => {
-        // For convenience, include the source header string
-        colDef.sourceLabel = headers[colDef.sourceIndex];
-        dataRow[colDef.key] = row[colDef.sourceIndex];
-        if (colDef.isNumber) dataRow[colDef.key] = Number(dataRow[colDef.key]);
+      Object.keys(fieldDefs).forEach((fieldId) => {
+        const fieldDef = fieldDefs[fieldId];
+        // for numbers, include Number-type value for sorting and filtering
+        // as well as D3 formatted string for display
+        if (fieldDef.isNumber) {
+          const value = Number(row[fieldDef.sourceIndex]);
+          dataRow[fieldId] = {
+            isNumber: true,
+            value,
+            string: d3.format(fieldDef.format)(value),
+          };
+        } else {
+          dataRow[fieldId] = row[fieldDef.sourceIndex];
+        }
       });
       data.push(dataRow);
     });
-    return { data, colDefs };
+    return { data, fieldDefs };
   }
 
   return { parse };
@@ -78,7 +89,7 @@ function assignCountryCode(datasetArg, nameLookup) {
 
 // Read raw TSV data and parse into dataset object
 const TSV_DATA = fs.readFileSync(path.join(DATA_DIR, 'dataset.csv'), { encoding: 'utf8' });
-const te = tsvExtractor(COL_DEFS);
+const te = tsvExtractor(FIELD_DEFS);
 const dataset = assignCountryCode(te.parse(TSV_DATA), countries.name);
 // Assign centroids from 'countries'
 dataset.data.forEach((datum) => {
