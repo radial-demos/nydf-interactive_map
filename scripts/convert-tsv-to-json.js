@@ -17,7 +17,7 @@ const COL_DEFS = [
     key: 'areaLoss', sourceIndex: 2, label: 'Tree Cover Loss', units: 'MHa', isNumber: true,
   },
   {
-    key: 'percentLoss', sourceIndex: 3, label: 'Loss per Year', units: '%/yr', isNumber: true,
+    key: 'percentLoss', sourceIndex: 3, label: 'Percent per Year', units: '%/yr', isNumber: true,
   },
   {
     key: 'financeResultsBased', sourceIndex: 6, label: 'Results-Based REDD+ Commitments', units: 'USD Million', isNumber: true,
