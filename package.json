@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "node dev-server.js",
-    "webpack": "node_modules/.bin/webpack",
+    "start:webpack": "node_modules/.bin/webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Darren Anderson",
@@ -15,6 +15,7 @@
     "url": "git+https://github.com/radialit/nydf-interactive_map"
   },
   "dependencies": {
+    "d3": "^4.11.0",
     "debug": "^3.1.0",
     "dotenv": "^4.0.0",
     "fs-extra": "^4.0.2",
