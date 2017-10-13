@@ -1,21 +1,21 @@
 <table class="table table--data">
   <tbody>
     <tr>
-      <th data-field="countryName">{{colDefs.0.label}}</th>
-      <th class="sortable" data-field="areaLoss">{{colDefs.1.label}}</th>
-      <th class="sortable" data-field="percentLoss">{{colDefs.2.label}}</th>
-      <th class="sortable" data-field="financeResultsBased">{{colDefs.3.label}}</th>
-      <th class="sortable" data-field="financePhase">{{colDefs.4.label}}</th>
-      <th class="sortable" data-field="financeDevelopment">{{colDefs.5.label}}</th>
+      <th class= "category" data-field="countryName">{{fieldDefs.countryName.label}}</th>
+      <th class="sortable" data-field="areaLoss">{{#with fieldDefs.areaLoss}} {{label}}<br>({{units}}){{/with}}</th>
+      <th class="sortable" data-field="percentLoss">{{#with fieldDefs.percentLoss}} {{label}}<br>({{units}}){{/with}}</th>
+      <th class="sortable" data-field="financeResultsBased">{{#with fieldDefs.financeResultsBased}} {{label}}<br>({{units}}){{/with}}</th>
+      <th class="sortable" data-field="financePhase">{{#with fieldDefs.financePhase}} {{label}}<br>({{units}}){{/with}}</th>
+      <th class="sortable" data-field="financeDevelopment">{{#with fieldDefs.financeDevelopment}} {{label}}<br>({{units}}){{/with}}</th>
     </tr>
     {{#each data}}
       <tr>
-        <td>{{countryName}}</td>
-        <td>{{areaLoss}}</td>
-        <td>{{percentLoss}}</td>
-        <td>{{financeResultsBased}}</td>
-        <td>{{financePhase}}</td>
-        <td>{{financeDevelopment}}</td>
+        <td class="cell">{{countryName}}</td>
+        <td class="cell cell--number"><span class="number">{{areaLoss.string}}</span></td>
+        <td class="cell cell--number"><span class="number">{{percentLoss.string}}</span></td>
+        <td class="cell cell--number"><span class="number">{{financeResultsBased.string}}</span></td>
+        <td class="cell cell--number"><span class="number">{{financePhase.string}}</span></td>
+        <td class="cell cell--number"><span class="number">{{financeDevelopment.string}}</span></td>
       </tr>
     {{/each}}
   </tbody>
