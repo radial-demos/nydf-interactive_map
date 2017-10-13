@@ -1,0 +1,22 @@
+<table class="table table--data">
+  <tbody>
+    <tr>
+      <th data-field="countryName">{{colDefs.0.label}}</th>
+      <th class="sortable" data-field="areaLoss">{{colDefs.1.label}}</th>
+      <th class="sortable" data-field="percentLoss">{{colDefs.2.label}}</th>
+      <th class="sortable" data-field="financeResultsBased">{{colDefs.3.label}}</th>
+      <th class="sortable" data-field="financePhase">{{colDefs.4.label}}</th>
+      <th class="sortable" data-field="financeDevelopment">{{colDefs.5.label}}</th>
+    </tr>
+    {{#each data}}
+      <tr>
+        <td>{{countryName}}</td>
+        <td>{{areaLoss}}</td>
+        <td>{{percentLoss}}</td>
+        <td>{{financeResultsBased}}</td>
+        <td>{{financePhase}}</td>
+        <td>{{financeDevelopment}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
