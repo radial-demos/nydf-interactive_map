@@ -1,23 +1,49 @@
+// import Color from 'color';
 import dataset from '../data_files/dataset.json';
 import dataTableTpl from './views/dataTable.hbs';
 
 const MAX_ROWS = 25;
+const COROPLETH_BIN_COLORS = [
+  '#fef0d9',
+  '#fdcc8a',
+  '#fc8d59',
+  '#e34a33',
+  '#b30000',
+];
+// console.log(COROPLETH_BASE_COLOR.value());
 
 let map;
 
 function getSortedData(sortField, maxRows = 0) {
-  let d = dataset.data.slice(); // shallow copy
+  let data = dataset.data.slice(); // shallow copy
   if (sortField) {
-    d.sort((a, b) => {
+    data.sort((a, b) => {
       if (a[sortField].value > b[sortField].value) return -1;
       if (a[sortField].value < b[sortField].value) return 1;
       return 0;
     });
   }
-  if (maxRows) d = d.slice(0, maxRows);
+  if (maxRows) data = data.slice(0, maxRows);
   // include 1-based index for display
-  d = d.map((ele, ix) => Object.assign(ele, { index: (ix + 1) }));
-  return d;
+  data = data.map((ele, ix) => Object.assign(ele, { index: (ix + 1) }));
+  // calculate min and max
+  let min = Number.POSITIVE_INFINITY;
+  let max = 0;
+  data.forEach((datum) => {
+    if (datum[sortField].value > max) max = datum[sortField].value;
+    if (datum[sortField].value < min) min = datum[sortField].value;
+  });
+  return { data, min, max };
+}
+
+function getColor(value, fieldDef) {
+  const percentOfMax = value / fieldDef.max;
+  const bins = COROPLETH_BIN_COLORS.slice(
+    0, COROPLETH_BIN_COLORS.length - 2).reduce((acc, cur, index) =>
+    acc.concat(acc[0] + acc[index]), [1 / (COROPLETH_BIN_COLORS.length)]);
+  bins.push(Number.POSITIVE_INFINITY);
+  const binIndex = bins.findIndex(bin => (percentOfMax <= bin));
+  return COROPLETH_BIN_COLORS[binIndex];
 }
 
 function updateTable(data, sortField) {
@@ -38,7 +64,7 @@ function updateMap(data, sortField) {
   map.dataProvider.zoomLongitude = map.zoomLongitude();
   if (sortField.display === 'choropleth') {
     const areas = data.map((datum) => {
-      return { id: datum.countryCode, color: '#993333' };
+      return { id: datum.countryCode, color: getColor(datum[sortField.key].value, sortField) };
     });
     map.dataProvider.areas = areas;
   }
@@ -47,12 +73,15 @@ function updateMap(data, sortField) {
 }
 
 function update(sortFieldKey = 'areaLoss') {
-  const data = getSortedData(sortFieldKey, MAX_ROWS);
-  const sortField = dataset.fieldDefs[sortFieldKey];
-  updateTable(data, Object.assign({}, sortField, { key: sortFieldKey }));
-  updateMap(data, Object.assign({}, sortField, { key: sortFieldKey }));
-  // console.log(map);
-  // if (map.dataGenerated) return;
+  const { data, min, max } = getSortedData(sortFieldKey, MAX_ROWS);
+  // assign (merge) derived properties for min and max to sortField
+  // also assign key
+  const sortField = Object.assign(
+    {},
+    dataset.fieldDefs[sortFieldKey], { min, max, key: sortFieldKey },
+  );
+  updateTable(data, sortField);
+  updateMap(data, sortField);
 }
 
 function init() {
@@ -64,7 +93,7 @@ map = AmCharts.makeChart('chartdiv', {
   type: 'map',
   projection: 'eckert3',
   addClassNames: true,
-  panEventsEnabled: true,
+  panEventsEnabled: false,
   titles: [{
     text: 'Tree Cover Loss',
     size: 16,
