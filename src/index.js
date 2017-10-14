@@ -1,17 +1,21 @@
 import dataset from '../data_files/dataset.json';
 import dataTableTpl from './views/dataTable.hbs';
 
+const MAX_ROWS = 20;
+
 let map;
 
-function getSortedData(sortField) {
+function getSortedData(sortField, maxRows = 0) {
   const d = dataset.data.slice(); // shallow copy
-  if (!sortField) return d;
-  d.sort((a, b) => {
-    if (a[sortField].value > b[sortField].value) return -1;
-    if (a[sortField].value < b[sortField].value) return 1;
-    return 0;
-  });
-  return d;
+  if (sortField) {
+    d.sort((a, b) => {
+      if (a[sortField].value > b[sortField].value) return -1;
+      if (a[sortField].value < b[sortField].value) return 1;
+      return 0;
+    });
+  }
+  if (!maxRows) return d;
+  return d.slice(0, maxRows);
 }
 
 function updateTable(data, sortField) {
@@ -35,7 +39,7 @@ function updateMap(data, sortField) {
 }
 
 function update(sortFieldKey = 'areaLoss') {
-  const data = getSortedData(sortFieldKey);
+  const data = getSortedData(sortFieldKey, MAX_ROWS);
   const sortField = dataset.fieldDefs[sortFieldKey];
   updateTable(data, Object.assign({}, sortField, { key: sortFieldKey }));
   updateMap(data, Object.assign({}, sortField, { key: sortFieldKey }));
