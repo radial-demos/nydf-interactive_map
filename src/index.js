@@ -34,8 +34,14 @@ function updateMap(data, sortField) {
   map.dataProvider.zoomLevel = map.zoomLevel();
   map.dataProvider.zoomLatitude = map.zoomLatitude();
   map.dataProvider.zoomLongitude = map.zoomLongitude();
+  if (sortField.display === 'choropleth') {
+    const areas = data.map((datum) => {
+      return { id: datum.countryCode, color: '#993333' };
+    });
+    map.dataProvider.areas = areas;
+  }
   map.titles[0].text = `${sortField.label} (${sortField.units})`;
-  map.validateData();
+  map.validateData(); // re-draws map
 }
 
 function update(sortFieldKey = 'areaLoss') {
@@ -56,12 +62,13 @@ map = AmCharts.makeChart('chartdiv', {
   type: 'map',
   projection: 'eckert3',
   addClassNames: true,
+  panEventsEnabled: true,
   titles: [{
     text: 'Tree Cover Loss',
-    size: 14,
+    size: 16,
   }, {
     text: 'source: Need sources or Darren will be unhappy.',
-    size: 11,
+    size: 12,
   }],
   areasSettings: {
     // 'unlistedAreasColor': '#000000',
