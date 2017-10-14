@@ -20,27 +20,38 @@ function updateTable(data, sortField) {
   $('th.sortable').on('click', (evt) => {
     evt.preventDefault();
     const $target = $(evt.target);
-    const field = $target.attr('data-field');
-    update(field);
+    const fieldKey = $target.attr('data-field');
+    update(fieldKey);
   });
 }
 
-function updateMap() {
-
+function updateMap(data, sortField) {
+  // set same zoom levels to retain map position/zoom
+  map.dataProvider.zoomLevel = map.zoomLevel();
+  map.dataProvider.zoomLatitude = map.zoomLatitude();
+  map.dataProvider.zoomLongitude = map.zoomLongitude();
+  map.titles[0].text = `${sortField.label} (${sortField.units})`;
+  map.validateData();
 }
 
-function update(sortField = 'areaLoss') {
-  const data = getSortedData(sortField);
-  updateTable(data, sortField);
+function update(sortFieldKey = 'areaLoss') {
+  const data = getSortedData(sortFieldKey);
+  const sortField = dataset.fieldDefs[sortFieldKey];
+  updateTable(data, Object.assign({}, sortField, { key: sortFieldKey }));
+  updateMap(data, Object.assign({}, sortField, { key: sortFieldKey }));
   // console.log(map);
   // if (map.dataGenerated) return;
 }
 
-update();
+function init() {
+  update();
+}
+
 // build map
 map = AmCharts.makeChart('chartdiv', {
   type: 'map',
   projection: 'eckert3',
+  addClassNames: true,
   titles: [{
     text: 'Tree Cover Loss',
     size: 14,
@@ -58,6 +69,6 @@ map = AmCharts.makeChart('chartdiv', {
   },
   listeners: [{
     event: 'init',
-    method: updateMap,
+    method: init,
   }],
 });
