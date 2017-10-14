@@ -21,7 +21,7 @@ function getSortedData(sortField, maxRows = 0) {
 function updateTable(data, sortField) {
   $('#tablediv').html(dataTableTpl({ fieldDefs: dataset.fieldDefs, data, sortField }));
   // set up listeners
-  $('th.sortable').on('click', (evt) => {
+  $('th.header--sortable').on('click', (evt) => {
     evt.preventDefault();
     const $target = $(evt.target);
     const fieldKey = $target.attr('data-field');
