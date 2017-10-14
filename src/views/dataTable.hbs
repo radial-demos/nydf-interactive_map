@@ -1,6 +1,7 @@
 <table class="table table--data">
   <tbody>
     <tr>
+      <th></th>
       <th class= "header header--category" data-field="countryName">{{fieldDefs.countryName.label}}</th>
       <th class="header header--sortable header--dividing" data-field="areaLoss">{{#with fieldDefs.areaLoss}} {{label}}<br>({{units}}){{/with}}</th>
       <th class="header header--sortable" data-field="percentLoss">{{#with fieldDefs.percentLoss}} {{label}}<br>({{units}}){{/with}}</th>
@@ -10,6 +11,7 @@
     </tr>
     {{#each data}}
       <tr>
+        <td class="cell">{{index}}</td>
         <td class="cell">{{countryName}}</td>
         <td class="cell cell--number cell--dividing"><span class="number">{{areaLoss.string}}</span></td>
         <td class="cell cell--number"><span class="number">{{percentLoss.string}}</span></td>

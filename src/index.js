@@ -1,12 +1,12 @@
 import dataset from '../data_files/dataset.json';
 import dataTableTpl from './views/dataTable.hbs';
 
-const MAX_ROWS = 20;
+const MAX_ROWS = 25;
 
 let map;
 
 function getSortedData(sortField, maxRows = 0) {
-  const d = dataset.data.slice(); // shallow copy
+  let d = dataset.data.slice(); // shallow copy
   if (sortField) {
     d.sort((a, b) => {
       if (a[sortField].value > b[sortField].value) return -1;
@@ -14,8 +14,10 @@ function getSortedData(sortField, maxRows = 0) {
       return 0;
     });
   }
-  if (!maxRows) return d;
-  return d.slice(0, maxRows);
+  if (maxRows) d = d.slice(0, maxRows);
+  // include 1-based index for display
+  d = d.map((ele, ix) => Object.assign(ele, { index: (ix + 1) }));
+  return d;
 }
 
 function updateTable(data, sortField) {
