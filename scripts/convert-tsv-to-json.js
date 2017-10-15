@@ -8,28 +8,9 @@ const d3 = require('d3');
 const _ = require('lodash');
 
 const countries = require('../data_files/countries');
+const fieldDefs = require('./field-definitions');
 
 const DATA_DIR = path.join(__dirname, '..', 'data_files');
-const FIELD_DEFS = {
-  countryName: {
-    sourceIndex: 0, label: 'Country',
-  },
-  areaLoss: {
-    sourceIndex: 2, label: 'Tree Cover Loss', units: 'M ha', isNumber: true, format: '.1f', display: 'choropleth',
-  },
-  percentLoss: {
-    sourceIndex: 3, label: 'Tree Cover Loss', units: 'percent/yr', isNumber: true, format: '.3f', display: 'choropleth',
-  },
-  financeResultsBased: {
-    sourceIndex: 6, label: 'Results-Based REDD+ Commitments', units: 'M USD', isNumber: true, format: ',.0f', display: 'circle',
-  },
-  financePhase: {
-    sourceIndex: 4, label: 'REDD+ Phase 1 and 2 Finance', units: 'M USD', isNumber: true, format: ',.0f', display: 'circle',
-  },
-  financeDevelopment: {
-    sourceIndex: 5, label: 'Development Finance', units: 'M USD', isNumber: true, format: ',.0f', display: 'circle',
-  },
-};
 
 function tsvExtractor(fieldDefsArg) {
   function parse(tsvString) {
@@ -89,7 +70,7 @@ function assignCountryCode(datasetArg, nameLookup) {
 
 // Read raw TSV data and parse into dataset object
 const TSV_DATA = fs.readFileSync(path.join(DATA_DIR, 'dataset.csv'), { encoding: 'utf8' });
-const te = tsvExtractor(FIELD_DEFS);
+const te = tsvExtractor(fieldDefs);
 const dataset = assignCountryCode(te.parse(TSV_DATA), countries.name);
 // Assign centroids from 'countries'
 dataset.data.forEach((datum) => {
