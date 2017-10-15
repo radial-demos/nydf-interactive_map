@@ -71,7 +71,7 @@ function updateMap(data, sortField) {
     });
     map.dataProvider.areas = areas;
   } else if (sortField.display === 'icon:dollar') {
-    const images = data.map((datum) => {
+    const images = data.filter(datum => datum.centroid).map((datum) => {
       return {
         latitude: datum.centroid.latitude,
         longitude: datum.centroid.longitude,
