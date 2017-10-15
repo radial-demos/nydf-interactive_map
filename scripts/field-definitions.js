@@ -8,7 +8,7 @@ module.exports = {
     label: 'Tree Cover Loss',
     units: 'M ha',
     isNumber: true,
-    format: '.1f',
+    format: '.2f',
     display: 'choropleth',
     binPartitions: [
       { value: 0.005, label: '< 5,000 ha' },
@@ -19,11 +19,11 @@ module.exports = {
   },
   percentLoss: {
     sourceIndex: 3,
-    multiplier: 100,
+    multiplier: 100, /* transform raw value */
     label: 'Tree Cover Loss',
     units: 'percent/year',
     isNumber: true,
-    format: '.3f',
+    format: '.2f',
     display: 'choropleth',
     binPartitions: [
       { value: 0.005, label: '< 0.005 %' },

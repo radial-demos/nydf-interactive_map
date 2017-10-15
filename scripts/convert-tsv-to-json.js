@@ -8,7 +8,7 @@ const d3 = require('d3');
 const _ = require('lodash');
 
 const countries = require('../data_files/countries');
-const fieldDefs = require('./field-definitions');
+const fieldDefinitions = require('./field-definitions');
 
 const DATA_DIR = path.join(__dirname, '..', 'data_files');
 
@@ -31,7 +31,9 @@ function tsvExtractor(fieldDefsArg) {
         // for numbers, include Number-type value for sorting and filtering
         // as well as D3 formatted string for display
         if (fieldDef.isNumber) {
-          const value = Number(row[fieldDef.sourceIndex]);
+          let value = Number(row[fieldDef.sourceIndex]);
+          // some fields requiere transforation
+          if (fieldDef.multiplier) value *= fieldDef.multiplier;
           dataRow[fieldId] = {
             isNumber: true,
             value,
@@ -70,7 +72,7 @@ function assignCountryCode(datasetArg, nameLookup) {
 
 // Read raw TSV data and parse into dataset object
 const TSV_DATA = fs.readFileSync(path.join(DATA_DIR, 'dataset.csv'), { encoding: 'utf8' });
-const te = tsvExtractor(fieldDefs);
+const te = tsvExtractor(fieldDefinitions);
 const dataset = assignCountryCode(te.parse(TSV_DATA), countries.name);
 // Assign centroids from 'countries'
 dataset.data.forEach((datum) => {
