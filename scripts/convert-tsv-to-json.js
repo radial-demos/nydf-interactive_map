@@ -70,6 +70,10 @@ function assignCountryCode(datasetArg, nameLookup) {
   return datasetArg;
 }
 
+function getBinIndex(partitions, value) {
+  return partitions.findIndex(partition => (value <= partition.value));
+}
+
 // Read raw TSV data and parse into dataset object
 const TSV_DATA = fs.readFileSync(path.join(DATA_DIR, 'dataset.csv'), { encoding: 'utf8' });
 const te = tsvExtractor(fieldDefinitions);
@@ -78,5 +82,26 @@ const dataset = assignCountryCode(te.parse(TSV_DATA), countries.name);
 dataset.data.forEach((datum) => {
   if (!datum.countryCode) return;
   datum.centroid = countries.centroid[datum.countryCode];
+});
+// assign key, min and max to each numberic-type field definition
+// assign isZero, percentOfMax, and binIndex to each datum
+Object.keys(dataset.fieldDefs).forEach((fieldKey) => {
+  const fieldDef = dataset.fieldDefs[fieldKey];
+  fieldDef.key = fieldKey;
+  if (fieldDef.isNumber) {
+    fieldDef.min = Number.POSITIVE_INFINITY;
+    fieldDef.max = 0;
+    dataset.data.forEach((datum) => {
+      const { value } = datum[fieldKey];
+      datum[fieldKey].isZero = (value === 0);
+      if (value > fieldDef.max) fieldDef.max = value;
+      if (value < fieldDef.min) fieldDef.min = value;
+    });
+    dataset.data.forEach((datum) => {
+      const { value } = datum[fieldKey];
+      datum[fieldKey].percentOfMax = (value * 100) / fieldDef.max;
+      datum[fieldKey].binIndex = getBinIndex(fieldDef.binPartitions, value);
+    });
+  }
 });
 fs.writeJsonSync(path.join(DATA_DIR, 'dataset.json'), dataset);
