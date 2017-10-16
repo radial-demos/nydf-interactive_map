@@ -21,9 +21,9 @@ bs.init({
   reloadDelay: 500,
   files: ['./public'],
   // proxy: `http://127.0.0.1:${process.env.PORT}`,
-  // serveStatic: [{
-  //   directory: true,
-  //   route: '/',
-  //   dir: './public',
-  // }],
+  serveStatic: [{
+    directory: true,
+    route: '/',
+    dir: './public',
+  }],
 });
