@@ -56,9 +56,10 @@ Clone this repo and run ```npm i``` to install node_modules.
 - [x] Create 'src' directory to contain client-side JS and SCSS files. Use entry point 'src/index.js'. Set up Webpack/Babel to bundle from this entry point and write output JS and CSS files into 'public/assets'.
 - [x] Create basic Bootstrap 3 page
 - [x] Include map files.
-- [x] Draw table.
-- [x] Draw map.
+- [x] Render table.
+- [x] Render map.
 - [x] Include event listeners to respond to table-header clicks.
 - [x] Modify choropleth in response to clicks on headers for tree-cover loss.
 - [ ] Modify icons in response to clicks on financial headers.
 - [ ] Highlight active table headers.
+- [ ] Render legend.
