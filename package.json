@@ -12,7 +12,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/radialit/nydf-interactive_map"
+    "url": "git+https://github.com/radial-demos/nydf-interactive_map"
   },
   "dependencies": {
     "color": "^2.0.0",
