@@ -1,5 +1,7 @@
 # Interactive Graphic for NYDF Forest Declaration Website
 
+Live development version available at [demos/nydf-interactive_map](http://radial-demos.com/nydf-interactive_map/). This project is in development!
+
 Client requests a single interactive graphic to display map data corresponding to several published static figures.
 
 Data is for developing countries consisting of the following fields (units).
