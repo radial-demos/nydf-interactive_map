@@ -26,6 +26,10 @@ const BIN_ICONS = [
   icons.money_bag,
 ];
 
+let activeAreaFieldKey = 'areaLoss';
+let activeFinanceFieldKey = 'financeResultsBased';
+let activeSortedFieldKey = activeAreaFieldKey;
+
 let map;
 
 function getSortedData(sortField, maxRows = 0) {
@@ -43,14 +47,19 @@ function getSortedData(sortField, maxRows = 0) {
   return data;
 }
 
-function updateTable(data, sortField) {
-  $('#tablediv').html(dataTableTpl({ fieldDefs: dataset.fieldDefs, data, sortField }));
+function updateTable(data) {
+  const fieldDefs = {};
+  Object.keys(dataset.fieldDefs).forEach((key) => {
+    const fieldDef = Object.assign({}, dataset.fieldDefs[key]);
+    fieldDef.isSorted = (key === activeSortedFieldKey);
+    fieldDef.isActive = ([activeAreaFieldKey, activeFinanceFieldKey].includes(key));
+    fieldDefs[key] = fieldDef;
+  });
+  $('#tablediv').html(dataTableTpl({ fieldDefs, data }));
   // set up listeners
   $('th.header--sortable').on('click', (evt) => {
     evt.preventDefault();
-    const $target = $(evt.target);
-    const fieldKey = $target.attr('data-field');
-    update(fieldKey);
+    update($(evt.target).attr('data-field'));
   });
 }
 
@@ -82,11 +91,40 @@ function updateMap(data, sortField) {
   map.validateData(); // re-draw map
 }
 
-function update(sortFieldKey = 'areaLoss') {
-  const data = getSortedData(sortFieldKey, MAX_ROWS);
-  const sortField = dataset.fieldDefs[sortFieldKey];
-  updateTable(data, sortField);
-  updateMap(data, sortField);
+function update(selectedFieldKey) {
+  const selectedField = dataset.fieldDefs[selectedFieldKey];
+  // let data;
+  // if a field was selected, update active field keys
+  if (selectedFieldKey) {
+    if (selectedField.type === 'area') {
+      if (activeAreaFieldKey === selectedFieldKey) {
+        // deactivate activeAreaFieldKey and sort by activeFinanceFieldKey
+        activeAreaFieldKey = '';
+        activeSortedFieldKey = activeFinanceFieldKey;
+      } else {
+        // activate activeAreaFieldKey and sort by it
+        activeAreaFieldKey = selectedFieldKey;
+        activeSortedFieldKey = selectedFieldKey;
+      }
+    } else if (selectedField.type === 'finance') {
+      if (activeFinanceFieldKey === selectedFieldKey) {
+        // deactivate activeFinanceFieldKey and sort by activeAreaFieldKey
+        activeFinanceFieldKey = '';
+        activeSortedFieldKey = activeAreaFieldKey;
+      } else {
+        // activate activeFinanceFieldKey and sort by it
+        activeFinanceFieldKey = selectedFieldKey;
+        activeSortedFieldKey = selectedFieldKey;
+      }
+    }
+  }
+  const data = getSortedData(activeSortedFieldKey, MAX_ROWS);
+  // console.log(activeAreaFieldKey);
+  // console.log(activeFinanceFieldKey);
+  // console.log(activeSortedFieldKey);
+  // console.log('===');
+  updateTable(data);
+  // updateMap(data, activeSortedFieldKey);
 }
 
 function init() {
