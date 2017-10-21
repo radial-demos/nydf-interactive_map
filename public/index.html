@@ -18,6 +18,8 @@
       }
       table.table--data th.header {
         text-align: center;
+        border-bottom-style: solid;
+        border-bottom-width: 3px;
         /*position: relative;*/
       }
       table.table--data th.header--category {
@@ -30,6 +32,27 @@
       }
       .header--dividing {
         border-left: 1px solid #ccc;
+      }
+      .header--area {
+        background-color: #fef0d9;
+        border-bottom-color: #fc8d59;
+      }
+      .header--area.header--active {
+        background-color: #fdcc8a;
+      }
+      .header--area.header--sorted {
+        border-bottom-color: #d7301f;
+      }
+      .header--finance {
+        background-color: #edf8e9;
+        border-bottom-color: #74c476;
+      }
+      .header--finance.header--active {
+        background-color: #bae4b3;
+        /*border-bottom-color: #bae4b3;*/
+      }
+      .header--finance.header--sorted {
+        border-bottom-color: #238b45;
       }
       table.table--data tr.row--fixed {
         /*position: fixed;*/
@@ -68,6 +91,7 @@
     </div>
     <div class="container container-main">
       <div id="chartdiv"></div>
+      <div id="legenddiv"></div>
       <div id="tablediv"></div>
     </div>
     <div class="container container-footer">

@@ -3,11 +3,11 @@
     <tr>
       <th></th>
       <th class= "header header--category" data-field="countryName">{{fieldDefs.countryName.label}}</th>
-      <th class="header header--sortable header--dividing" data-field="areaLoss">{{#with fieldDefs.areaLoss}} {{label}}<br>({{units}}){{/with}}</th>
-      <th class="header header--sortable" data-field="percentLoss">{{#with fieldDefs.percentLoss}} {{label}}<br>({{units}}){{/with}}</th>
-      <th class="header header--sortable header--dividing" data-field="financeResultsBased">{{#with fieldDefs.financeResultsBased}} {{label}}<br>({{units}}){{/with}}</th>
-      <th class="header header--sortable" data-field="financePhase">{{#with fieldDefs.financePhase}} {{label}}<br>({{units}}){{/with}}</th>
-      <th class="header header--sortable" data-field="financeDevelopment">{{#with fieldDefs.financeDevelopment}} {{label}}<br>({{units}}){{/with}}</th>
+      {{#with fieldDefs.areaLoss}}<th class="header header--area header--sortable header--dividing{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="areaLoss">{{label}}<br>({{units}})</th>{{/with}}
+      {{#with fieldDefs.percentLoss}}<th class="header header--area header--sortable{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="percentLoss">{{label}}<br>({{units}})</th>{{/with}}
+      {{#with fieldDefs.financeResultsBased}}<th class="header header--finance header--sortable header--dividing{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="financeResultsBased">{{label}}<br>({{units}})</th>{{/with}}
+      {{#with fieldDefs.financePhase}}<th class="header header--finance header--sortable{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="financePhase">{{label}}<br>({{units}})</th>{{/with}}
+      {{#with fieldDefs.financeDevelopment}}<th class="header header--finance header--sortable{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="financeDevelopment">{{label}}<br>({{units}})</th>{{/with}}
     </tr>
     {{#each data}}
       <tr>
