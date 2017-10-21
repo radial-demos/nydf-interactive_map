@@ -5,6 +5,7 @@ module.exports = {
   },
   areaLoss: {
     sourceIndex: 2,
+    type: 'area',
     label: 'Tree Cover Loss',
     units: 'M ha',
     isNumber: true,
@@ -20,6 +21,7 @@ module.exports = {
   percentLoss: {
     sourceIndex: 3,
     multiplier: 100, /* transform raw value */
+    type: 'area',
     label: 'Tree Cover Loss',
     units: 'percent/year',
     isNumber: true,
@@ -34,6 +36,7 @@ module.exports = {
   },
   financeResultsBased: {
     sourceIndex: 6,
+    type: 'finance',
     label: 'Results-Based REDD+ Commitments',
     units: 'M USD',
     isNumber: true,
@@ -48,6 +51,7 @@ module.exports = {
   },
   financePhase: {
     sourceIndex: 4,
+    type: 'finance',
     label: 'REDD+ Phase 1 and 2 Finance',
     units: 'M USD',
     isNumber: true,
@@ -62,6 +66,7 @@ module.exports = {
   },
   financeDevelopment: {
     sourceIndex: 5,
+    type: 'finance',
     label: 'Development Finance',
     units: 'M USD',
     isNumber: true,
