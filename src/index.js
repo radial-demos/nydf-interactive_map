@@ -1,4 +1,4 @@
-// import Color from 'color';
+import './scss/main.scss'; // Force Webpack to load SCSS
 import dataset from '../data_files/dataset.json';
 import dataTableTpl from './views/dataTable.hbs';
 import dataLegendTpl from './views/dataLegend.hbs';
