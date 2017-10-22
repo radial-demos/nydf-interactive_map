@@ -1,6 +1,7 @@
 // import Color from 'color';
 import dataset from '../data_files/dataset.json';
 import dataTableTpl from './views/dataTable.hbs';
+import dataLegendTpl from './views/dataLegend.hbs';
 import icons from './modules/icons';
 
 const MAX_ROWS = 0;
@@ -47,7 +48,7 @@ function getSortedData(sortField, maxRows = 0) {
   return data;
 }
 
-function updateTable(data) {
+function updateTableAndLegend(data) {
   const fieldDefs = {};
   Object.keys(dataset.fieldDefs).forEach((key) => {
     const fieldDef = Object.assign({}, dataset.fieldDefs[key]);
@@ -55,6 +56,7 @@ function updateTable(data) {
     fieldDef.isActive = ([activeAreaFieldKey, activeFinanceFieldKey].includes(key));
     fieldDefs[key] = fieldDef;
   });
+  $('#legenddiv').html(dataLegendTpl({ areaFieldDef: fieldDefs[activeAreaFieldKey], financeFieldDef: fieldDefs[activeFinanceFieldKey] }));
   $('#tablediv').html(dataTableTpl({ fieldDefs, data }));
   // set up listeners
   $('th.header--sortable').on('click', (evt) => {
@@ -123,7 +125,7 @@ function update(selectedFieldKey) {
   // console.log(activeFinanceFieldKey);
   // console.log(activeSortedFieldKey);
   // console.log('===');
-  updateTable(data);
+  updateTableAndLegend(data);
   // updateMap(data, activeSortedFieldKey);
 }
 
