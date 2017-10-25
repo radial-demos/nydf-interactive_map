@@ -99,32 +99,16 @@ function update(selectedFieldKey) {
   // if a field was selected, update active field keys
   if (selectedFieldKey) {
     if (selectedField.type === 'area') {
-      if (activeAreaFieldKey === selectedFieldKey) {
-        // deactivate activeAreaFieldKey and sort by activeFinanceFieldKey
-        activeAreaFieldKey = '';
-        activeSortedFieldKey = activeFinanceFieldKey;
-      } else {
-        // activate activeAreaFieldKey and sort by it
-        activeAreaFieldKey = selectedFieldKey;
-        activeSortedFieldKey = selectedFieldKey;
-      }
+      // activate activeAreaFieldKey and sort by it
+      activeAreaFieldKey = selectedFieldKey;
+      activeSortedFieldKey = selectedFieldKey;
     } else if (selectedField.type === 'finance') {
-      if (activeFinanceFieldKey === selectedFieldKey) {
-        // deactivate activeFinanceFieldKey and sort by activeAreaFieldKey
-        activeFinanceFieldKey = '';
-        activeSortedFieldKey = activeAreaFieldKey;
-      } else {
-        // activate activeFinanceFieldKey and sort by it
-        activeFinanceFieldKey = selectedFieldKey;
-        activeSortedFieldKey = selectedFieldKey;
-      }
+      // activate activeFinanceFieldKey and sort by it
+      activeFinanceFieldKey = selectedFieldKey;
+      activeSortedFieldKey = selectedFieldKey;
     }
   }
   const data = getSortedData(activeSortedFieldKey, MAX_ROWS);
-  // console.log(activeAreaFieldKey);
-  // console.log(activeFinanceFieldKey);
-  // console.log(activeSortedFieldKey);
-  // console.log('===');
   updateTableAndLegend(data);
   // updateMap(data, activeSortedFieldKey);
 }
