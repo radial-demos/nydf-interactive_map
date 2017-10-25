@@ -13,7 +13,7 @@ module.exports = {
     display: 'choropleth',
     binPartitions: [
       { value: 0.005, label: '< 5,000 ha' },
-      { value: 0.1, label: '5,000 - 100,00 ha' },
+      { value: 0.1, label: '5,000 - 100,000 ha' },
       { value: 1, label: '100,000 - 1 M ha' },
       { value: Number.POSITIVE_INFINITY, label: '> 1 M ha' },
     ],
