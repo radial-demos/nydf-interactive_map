@@ -98,14 +98,13 @@ function update(selectedFieldKey) {
   // let data;
   // if a field was selected, update active field keys
   if (selectedFieldKey) {
+    activeSortedFieldKey = selectedFieldKey;
     if (selectedField.type === 'area') {
-      // activate activeAreaFieldKey and sort by it
+      // activate activeAreaFieldKey
       activeAreaFieldKey = selectedFieldKey;
-      activeSortedFieldKey = selectedFieldKey;
     } else if (selectedField.type === 'finance') {
-      // activate activeFinanceFieldKey and sort by it
+      // activate activeFinanceFieldKey
       activeFinanceFieldKey = selectedFieldKey;
-      activeSortedFieldKey = selectedFieldKey;
     }
   }
   const data = getSortedData(activeSortedFieldKey, MAX_ROWS);
