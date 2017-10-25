@@ -5,6 +5,7 @@ import dataLegendTpl from './views/dataLegend.hbs';
 import icons from './modules/icons';
 
 const MAX_ROWS = 0;
+const IS_DEFAULT_SORT_ORDER_REVERSE = true;
 const BACKGROUND_COLOR = '#bfcfff';
 const UNLISTED_AREAS_COLOR = '#dedede';
 const RED_BIN_COLORS = [
@@ -29,20 +30,22 @@ const BIN_ICONS = [
 
 let activeAreaFieldKey = 'areaLoss';
 let activeFinanceFieldKey = 'financeResultsBased';
-let activeSortedFieldKey = activeAreaFieldKey;
+let activeSortedFieldKey = activeFinanceFieldKey;
+let activeSortedFieldIsReverse = IS_DEFAULT_SORT_ORDER_REVERSE;
 
 let map;
 
-function getSortedData(sortField, maxRows = 0) {
+function getSortedData(sortField, isReverseSorted = false, maxRows = 0) {
   let data = dataset.data.slice(); // shallow copy
   if (sortField) {
     data.sort((a, b) => {
-      if (a[sortField].value > b[sortField].value) return -1;
-      if (a[sortField].value < b[sortField].value) return 1;
+      if (a[sortField].value > b[sortField].value) return 1;
+      if (a[sortField].value < b[sortField].value) return -1;
       return 0;
     });
   }
   if (maxRows) data = data.slice(0, maxRows);
+  if (isReverseSorted) data.reverse();
   // include 1-based index for display
   data = data.map((ele, ix) => Object.assign(ele, { index: (ix + 1) }));
   return data;
@@ -65,37 +68,46 @@ function updateTableAndLegend(data) {
   });
 }
 
-function updateMap(data, sortField) {
+function updateMap(data) {
   // set same zoom levels to retain map position/zoom
   map.dataProvider.zoomLevel = map.zoomLevel();
   map.dataProvider.zoomLatitude = map.zoomLatitude();
   map.dataProvider.zoomLongitude = map.zoomLongitude();
-  if (sortField.display === 'choropleth') {
-    const areas = data.map((datum) => {
-      return { id: datum.countryCode, color: RED_BIN_COLORS[datum[sortField.key].binIndex] };
-    });
-    map.dataProvider.areas = areas;
-  } else if (sortField.display === 'icon:dollar') {
-    const images = data.filter(datum => (datum.centroid && !datum.isZero)).map((datum) => {
-      return {
-        latitude: datum.centroid.latitude,
-        longitude: datum.centroid.longitude,
-        svgPath: BIN_ICONS[datum[sortField.key].binIndex],
-        color: GREEN_BIN_COLORS[3],
-        scale: 0.9,
-        zoomLevel: 5,
-        // title: datum.countryName,
-      };
-    });
-    map.dataProvider.images = images;
-  }
-  map.titles[0].text = `${sortField.label} (${sortField.units})`;
+  map.titles = [];
+  // draw both active field fields
+  [activeAreaFieldKey, activeFinanceFieldKey].forEach((key) => {
+    const fieldDef = dataset.fieldDefs[key];
+    if (fieldDef.display === 'choropleth') {
+      const areas = data.map((datum) => {
+        return { id: datum.countryCode, color: fieldDef.binPartitions[datum[key].binIndex].color };
+      });
+      map.dataProvider.areas = areas;
+    } else if (fieldDef.display === 'icon') {
+      const images = data.filter(datum => (datum.centroid && !datum.isZero)).map((datum) => {
+        return {
+          latitude: datum.centroid.latitude,
+          longitude: datum.centroid.longitude,
+          svgPath: fieldDef.binPartitions[datum[fieldDef.key].binIndex].icon,
+          color: fieldDef.binPartitions[datum[fieldDef.key].binIndex].color,
+          scale: 0.9,
+          zoomLevel: 5,
+          // title: datum.countryName,
+        };
+      });
+      map.dataProvider.images = images;
+    }
+    map.titles.push({ text: fieldDef.label });
+  });
   map.validateData(); // re-draw map
 }
 
 function update(selectedFieldKey) {
   const selectedField = dataset.fieldDefs[selectedFieldKey];
-  // let data;
+  if (selectedFieldKey === activeSortedFieldKey) {
+    activeSortedFieldIsReverse = !activeSortedFieldIsReverse;
+  } else {
+    activeSortedFieldIsReverse = IS_DEFAULT_SORT_ORDER_REVERSE;
+  }
   // if a field was selected, update active field keys
   if (selectedFieldKey) {
     activeSortedFieldKey = selectedFieldKey;
@@ -107,22 +119,24 @@ function update(selectedFieldKey) {
       activeFinanceFieldKey = selectedFieldKey;
     }
   }
-  const data = getSortedData(activeSortedFieldKey, MAX_ROWS);
+  const data = getSortedData(activeSortedFieldKey, activeSortedFieldIsReverse, MAX_ROWS);
   updateTableAndLegend(data);
-  // updateMap(data, activeSortedFieldKey);
+  updateMap(data);
 }
 
 function init() {
   // add colors to bin partitions
   Object.keys(dataset.fieldDefs).forEach((fieldKey) => {
     const fieldDef = dataset.fieldDefs[fieldKey];
-    if (fieldDef.display === 'choropleth') {
-      fieldDef.binPartitions.forEach((binPartition, ix) => {
+    if (!Array.isArray(fieldDef.binPartitions)) return;
+    fieldDef.binPartitions.forEach((binPartition, ix) => {
+      if (fieldDef.display === 'choropleth') {
         binPartition.color = RED_BIN_COLORS[ix];
-      });
-    } else if (fieldDef.display === 'icon') {
-
-    }
+      } else if (fieldDef.display === 'icon') {
+        binPartition.color = GREEN_BIN_COLORS[3];
+        binPartition.icon = BIN_ICONS[ix];
+      }
+    });
   });
   update();
 }
