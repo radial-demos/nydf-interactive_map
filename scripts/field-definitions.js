@@ -41,7 +41,7 @@ module.exports = {
     units: 'M USD',
     isNumber: true,
     format: ',.0f',
-    display: 'icon:dollar',
+    display: 'icon',
     binPartitions: [
       { value: 10, label: '< 10 M USD' },
       { value: 50, label: '10 M - 50 M USD' },
@@ -56,7 +56,7 @@ module.exports = {
     units: 'M USD',
     isNumber: true,
     format: ',.0f',
-    display: 'icon:dollar',
+    display: 'icon',
     binPartitions: [
       { value: 10, label: '< 10 M USD' },
       { value: 50, label: '10 M - 50 M USD' },
@@ -71,7 +71,7 @@ module.exports = {
     units: 'M USD',
     isNumber: true,
     format: ',.0f',
-    display: 'icon:dollar',
+    display: 'icon',
     binPartitions: [
       { value: 10, label: '< 10 M USD' },
       { value: 50, label: '10 M - 50 M USD' },
