@@ -130,6 +130,17 @@ function update(selectedFieldKey) {
 }
 
 function init() {
+  // add colors to bin partitions
+  Object.keys(dataset.fieldDefs).forEach((fieldKey) => {
+    const fieldDef = dataset.fieldDefs[fieldKey];
+    if (fieldDef.display === 'choropleth') {
+      fieldDef.binPartitions.forEach((binPartition, ix) => {
+        binPartition.color = RED_BIN_COLORS[ix];
+      });
+    } else if (fieldDef.display === 'icon') {
+
+    }
+  });
   update();
 }
 
