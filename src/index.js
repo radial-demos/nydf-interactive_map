@@ -22,8 +22,8 @@ const GREEN_BIN_COLORS = [
 ];
 
 const BIN_ICONS = [
-  icons.circle.d,
   icons.circleStroked.d,
+  icons.circle.d,
   icons.money_1.d,
   icons.money_bag.d,
 ];
@@ -82,15 +82,15 @@ function updateTableAndLegend() {
   $('#legenddiv').html(dataLegendTpl({ areaFieldDef: fieldDefs[activeAreaFieldKey], financeFieldDef: fieldDefs[activeFinanceFieldKey] }));
   $('#tablediv').html(dataTableTpl({ fieldDefs, data }));
   // set up listeners
-  $('th.header--sortable').on('click', (evt) => {
+  $('.table--data .header--sortable').on('click', (evt) => {
     evt.preventDefault();
     update($(evt.target).attr('data-field'));
   });
-  $('.legend-cell--finance .legend-entry').on('mouseenter', (evt) => {
+  $('.table--legend .cell--finance .legend-entry').on('mouseenter', (evt) => {
     evt.preventDefault();
     hideOtherIcons($(evt.currentTarget).attr('data-bin'));
   });
-  $('.legend-cell--finance .legend-entry').on('mouseleave', () => {
+  $('.table--legend .cell--finance .legend-entry').on('mouseleave', () => {
     hideOtherIcons();
     // console.log('leave');
   });
@@ -123,7 +123,6 @@ function updateMap() {
           outlineAlpha: 1,
           scale: 0.9,
           zoomLevel: 5,
-          // title: datum.countryName,
         };
       });
       map.dataProvider.images = images;
