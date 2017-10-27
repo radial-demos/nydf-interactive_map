@@ -128,7 +128,12 @@ function updateMap() {
       });
       map.dataProvider.images = images;
     }
-    map.titles.push({ text: fieldDef.label, size: 18 });
+    let titleText = fieldDef.label;
+    if (fieldDef.type === 'area') {
+      // labels for area type are the same so units is need to differentiate them
+      titleText += ` (${fieldDef.units})`;
+    }
+    map.titles.push({ text: titleText, size: 18 });
   });
   map.validateData(); // re-draw map
 }
