@@ -77,15 +77,37 @@
   overflow-y: scroll;
 }
 
-.marker {
+#legenddiv {
+  margin-top: -2px;
+}
+
+.legend-cell--finance {
+  .legend-entry {
+    cursor: pointer;
+    &:hover {
+      background-color: #bae4b3;
+    }
+  }
+
+}
+
+.legend-marker {
   display: inline-block;
   height: 16px;
+  margin: 5px;
   width: 16px;
+}
+
+.legend-text {
+  display: inline-block;
+  margin-left: 5px;
+  padding-top: 3px;
+  vertical-align: top;
 }
 
 .table--legend {
   margin: 0;
-  width: 50%;
+  width: 100%;
 
   td {
     background-color: #bfcfff;
