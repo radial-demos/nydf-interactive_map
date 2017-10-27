@@ -1,7 +1,7 @@
 <table class="table table--data">
   <tbody>
     <tr>
-      <th></th>
+      <th class= "header"></th>
       <th class= "header header--category" data-field="countryName">{{fieldDefs.countryName.label}}</th>
       {{#with fieldDefs.areaLoss}}<th class="header header--area header--sortable header--dividing{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="areaLoss">{{label}}<br>({{units}})</th>{{/with}}
       {{#with fieldDefs.percentLoss}}<th class="header header--area header--sortable{{#if isActive}} header--active{{/if}}{{#if isSorted}} header--sorted{{/if}}" data-field="percentLoss">{{label}}<br>({{units}})</th>{{/with}}
