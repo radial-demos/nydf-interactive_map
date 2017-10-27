@@ -24,8 +24,8 @@ const GREEN_BIN_COLORS = [
 const BIN_ICONS = [
   icons.circleStroked.d,
   icons.circle.d,
-  icons.money_1.d,
-  icons.money_bag.d,
+  icons.moneyBill.d,
+  icons.moneyBag.d,
 ];
 
 let activeAreaFieldKey = 'areaLoss';
