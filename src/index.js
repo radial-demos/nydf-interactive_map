@@ -22,10 +22,10 @@ const GREEN_BIN_COLORS = [
 ];
 
 const BIN_ICONS = [
-  icons.circle,
-  icons.circleStroked,
-  icons.money_1,
-  icons.money_bag,
+  icons.circle.d,
+  icons.circleStroked.d,
+  icons.money_1.d,
+  icons.money_bag.d,
 ];
 
 let activeAreaFieldKey = 'areaLoss';
@@ -34,9 +34,10 @@ let activeSortedFieldKey = activeFinanceFieldKey;
 let activeSortedFieldIsReverse = IS_DEFAULT_SORT_ORDER_REVERSE;
 
 let map;
+let data;
 
-function getSortedData(sortField, isReverseSorted = false, maxRows = 0) {
-  let data = dataset.data.slice(); // shallow copy
+function sortData(sortField, isReverseSorted = false, maxRows = 0) {
+  data = dataset.data.slice(); // shallow copy
   if (sortField) {
     data.sort((a, b) => {
       if (a[sortField].value > b[sortField].value) return 1;
@@ -48,10 +49,29 @@ function getSortedData(sortField, isReverseSorted = false, maxRows = 0) {
   if (isReverseSorted) data.reverse();
   // include 1-based index for display
   data = data.map((ele, ix) => Object.assign(ele, { index: (ix + 1) }));
-  return data;
 }
 
-function updateTableAndLegend(data) {
+function hideOtherIcons(visibleBinIndex) {
+  for (let binIndex = 0; binIndex < BIN_ICONS.length; binIndex += 1) {
+    if (visibleBinIndex === undefined || visibleBinIndex === String(binIndex)) {
+      map.showGroup(`bin_${binIndex}`);
+    } else {
+      map.hideGroup(`bin_${binIndex}`);
+    }
+  }
+  // map.dataProvider.images.forEach((image) => {
+  //   // console.log(image);
+  //   if (binIndex === undefined) {
+  //     map.hideGroup();
+  //     // image.alpha = 1;
+  //   } else {
+  //     // image.alpha = 0;
+  //   }
+  // });
+  // map.validateData(); // re-draw map
+}
+
+function updateTableAndLegend() {
   const fieldDefs = {};
   Object.keys(dataset.fieldDefs).forEach((key) => {
     const fieldDef = Object.assign({}, dataset.fieldDefs[key]);
@@ -66,9 +86,17 @@ function updateTableAndLegend(data) {
     evt.preventDefault();
     update($(evt.target).attr('data-field'));
   });
+  $('.legend-cell--finance .legend-entry').on('mouseenter', (evt) => {
+    evt.preventDefault();
+    hideOtherIcons($(evt.currentTarget).attr('data-bin'));
+  });
+  $('.legend-cell--finance .legend-entry').on('mouseleave', () => {
+    hideOtherIcons();
+    // console.log('leave');
+  });
 }
 
-function updateMap(data) {
+function updateMap() {
   // set same zoom levels to retain map position/zoom
   map.dataProvider.zoomLevel = map.zoomLevel();
   map.dataProvider.zoomLatitude = map.zoomLatitude();
@@ -85,10 +113,14 @@ function updateMap(data) {
     } else if (fieldDef.display === 'icon') {
       const images = data.filter(datum => (datum.centroid && !datum.isZero)).map((datum) => {
         return {
+          groupId: `bin_${datum[fieldDef.key].binIndex}`,
           latitude: datum.centroid.latitude,
           longitude: datum.centroid.longitude,
           svgPath: fieldDef.binPartitions[datum[fieldDef.key].binIndex].icon,
           color: fieldDef.binPartitions[datum[fieldDef.key].binIndex].color,
+          alpha: 1,
+          outlineColor: fieldDef.binPartitions[datum[fieldDef.key].binIndex].color,
+          outlineAlpha: 1,
           scale: 0.9,
           zoomLevel: 5,
           // title: datum.countryName,
@@ -96,7 +128,7 @@ function updateMap(data) {
       });
       map.dataProvider.images = images;
     }
-    map.titles.push({ text: fieldDef.label });
+    map.titles.push({ text: fieldDef.label, size: 18 });
   });
   map.validateData(); // re-draw map
 }
@@ -119,9 +151,9 @@ function update(selectedFieldKey) {
       activeFinanceFieldKey = selectedFieldKey;
     }
   }
-  const data = getSortedData(activeSortedFieldKey, activeSortedFieldIsReverse, MAX_ROWS);
-  updateTableAndLegend(data);
-  updateMap(data);
+  sortData(activeSortedFieldKey, activeSortedFieldIsReverse, MAX_ROWS);
+  updateTableAndLegend();
+  updateMap();
 }
 
 function init() {
@@ -149,13 +181,7 @@ map = AmCharts.makeChart('chartdiv', {
   panEventsEnabled: true,
   backgroundColor: BACKGROUND_COLOR,
   backgroundAlpha: 1,
-  titles: [{
-    text: 'Tree Cover Loss',
-    size: 16,
-  }, {
-    text: 'source: Need sources or Darren will be unhappy.',
-    size: 12,
-  }],
+  fontFamily: '"Helvetica Neue"',
   areasSettings: {
     unlistedAreasColor: UNLISTED_AREAS_COLOR,
     unlistedAreasOutlineColor: '#aaa',
