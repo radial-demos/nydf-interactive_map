@@ -2,12 +2,12 @@
 <tr>
   {{#with areaFieldDef}}
     {{#each binPartitions}}
-      <td class="legend-cell legend-cell--{{../type}}"><div class="legend-entry"><span style="background-color:{{color}};" class="legend-marker">&nbsp;</span><span class="legend-text">{{label}}</span></div></td>
+      <td class="cell cell--{{../type}}"><div class="legend-entry"><span style="background-color:{{color}};" class="legend-marker">&nbsp;</span><span class="legend-text">{{label}}</span></div></td>
     {{/each}}
   {{/with}}
   {{#with financeFieldDef}}
     {{#each binPartitions}}
-      <td class="legend-cell legend-cell--{{../type}}"><div class="legend-entry" data-bin="{{@index}}"><svg class="legend-icon" style="width:26px; height:26px;"><path viewBox="0 0 26 26" fill="{{color}}" stroke="{{color}}" d="{{icon}}"/></svg><span class="legend-text">{{label}}</span></div></td>
+      <td class="cell cell--{{../type}}"><div class="legend-entry" data-bin="{{@index}}"><svg class="legend-icon" style="width:26px; height:26px;"><path viewBox="0 0 26 26" fill="{{color}}" stroke="{{color}}" d="{{icon}}"/></svg><span class="legend-text">{{label}}</span></div></td>
     {{/each}}
   {{/with}}
 </tr>
